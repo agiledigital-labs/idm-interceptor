@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- <parent> <groupId>org.apache.felix</groupId> <artifactId>ipojo-maven-tutorial</artifactId> 
+		<version>1.12.1</version> <relativePath>../../pom.xml</relativePath> </parent> -->
+
+	<version>1.0.0</version>
+	<groupId>au.com.agiledigital.idm</groupId>
+	<artifactId>idm-osgi-interceptor</artifactId>
+
+	<packaging>bundle</packaging>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>forgerock-release</id>
+			<name>maven.forgerock.org-releases</name>
+			<url>http://maven.forgerock.org/repo/forgerock-openidm-6.5.0.4-dependencies</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+
+		<!-- https://mvnrepository.com/artifact/org.osgi/org.osgi.core -->
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<version>4.3.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.dependencymanager.annotation</artifactId>
+			<version>5.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.forgerock.commons</groupId>
+			<artifactId>json-resource</artifactId>
+			<version>24.0.28</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>5.1.1</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Private-Package>au.com.agiledigital.idm</Private-Package>
+						<_plugin>org.apache.felix.dm.annotation.plugin.bnd.AnnotationPlugin;add-require-capability=true</_plugin>
+					</instructions>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.felix</groupId>
+						<artifactId>org.apache.felix.dependencymanager.annotation</artifactId>
+						<version>5.0.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
