@@ -41,6 +41,9 @@ public class RequestHandlerInterceptor implements RequestHandler {
 	@ServiceDependency
 	private CryptoService cryptoService;
 	
+	@ServiceDependency
+	private SharedInterceptorStateService sharedState;
+	
 	private Map<String, ObjectClassInfoHelper> objectClassInfoMap;
 
 	private static Logger logger = LoggerFactory.getLogger(RequestHandlerInterceptor.class);
@@ -61,6 +64,7 @@ public class RequestHandlerInterceptor implements RequestHandler {
 		this.objectClassInfoMap = generateObjectClassInfo(ref);
 		this.factoryPid = factoryPid;
 		this.intercepted = service;
+		this.sharedState.registerInterceptor(factoryPid, this);
 
 		logger.info("Added Service {}", factoryPid);
 	}
@@ -79,6 +83,8 @@ public class RequestHandlerInterceptor implements RequestHandler {
 		this.intercepted = null;
 		this.factoryPid = null;
 		this.objectClassInfoMap = null;
+		
+		this.sharedState.unregisterInterceptor(factoryPid, this);
 		
 		logger.info("Removed Service {}", factoryPid);
 	}
