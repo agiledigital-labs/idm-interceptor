@@ -1,4 +1,4 @@
-package au.com.agiledigital.idm;
+package au.com.agiledigital.idm.interceptor;
 
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +31,9 @@ import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import au.com.agiledigital.idm.ComponentContextAdapter;
+import au.com.agiledigital.idm.SharedInterceptorStateService;
+
 @AspectService(ranking = 10, added = "added", changed = "changed", removed = "removed", filter = "(&(objectClass=org.forgerock.json.resource.RequestHandler)(service.factoryPid=org.forgerock.openidm.provisioner.openicf))")
 public class RequestHandlerInterceptor implements RequestHandler {
 	private volatile RequestHandler intercepted;
@@ -54,6 +57,8 @@ public class RequestHandlerInterceptor implements RequestHandler {
 		
 		return objectTypes;
 	}
+	
+	private boolean bypass = false;
 	
 	private ObjectClassInfoHelper getObjectClassInfoHelper(ResourcePath resourcePath) {
 		return objectClassInfoMap.get(resourcePath.get(0));

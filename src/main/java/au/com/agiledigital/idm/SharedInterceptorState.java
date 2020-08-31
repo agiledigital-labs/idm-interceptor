@@ -5,6 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.felix.dm.annotation.api.Component;
 import org.apache.felix.dm.annotation.api.ServiceScope;
 
+import au.com.agiledigital.idm.interceptor.RequestHandlerInterceptor;
+
 @Component(scope = ServiceScope.SINGLETON)
 public class SharedInterceptorState implements SharedInterceptorStateService {
 	
