@@ -86,7 +86,7 @@ public class EnhancedConfigInterceptor implements EnhancedConfig {
 			configuration.put("resultsHandlerConfig", resultsHandlerConfig);
 		}
 
-		// The dummy connector doesn't support filtering and returns all results, so we need to turn of filtering
+		// The dummy connector doesn't support filtering and returns all results, so we need to turn on filtering
 		// from the results handler
 		resultsHandlerConfig.put("enableFilteredResultsHandler", true);
 

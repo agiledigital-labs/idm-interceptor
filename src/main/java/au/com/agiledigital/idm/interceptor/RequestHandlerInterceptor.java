@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 import au.com.agiledigital.idm.ComponentContextAdapter;
 import au.com.agiledigital.idm.SharedInterceptorStateService;
 
-@AspectService(ranking = 10, added = "added", changed = "changed", removed = "removed", filter = "(&(objectClass=org.forgerock.json.resource.RequestHandler)(service.factoryPid=org.forgerock.openidm.provisioner.openicf))")
+//@AspectService(ranking = 10, added = "added", changed = "changed", removed = "removed", filter = "(&(objectClass=org.forgerock.json.resource.RequestHandler)(service.factoryPid=org.forgerock.openidm.provisioner.openicf))")
 public class RequestHandlerInterceptor implements RequestHandler {
 	private volatile RequestHandler intercepted;
 	private volatile String factoryPid;
