@@ -3,7 +3,6 @@ package au.com.agiledigital.idm.interceptor;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.felix.dm.annotation.api.AspectService;
 import org.apache.felix.dm.annotation.api.ServiceDependency;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
@@ -57,8 +56,6 @@ public class RequestHandlerInterceptor implements RequestHandler {
 		
 		return objectTypes;
 	}
-	
-	private boolean bypass = false;
 	
 	private ObjectClassInfoHelper getObjectClassInfoHelper(ResourcePath resourcePath) {
 		return objectClassInfoMap.get(resourcePath.get(0));

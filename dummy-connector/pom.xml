@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.forgerock.openicf.connectors</groupId>
+		<artifactId>connectors-parent</artifactId>
+		<version>1.5.6.0</version>
+		<relativePath></relativePath>
+	</parent>
+	<groupId>au.com.agiledigital.idm.connector</groupId>
+	<artifactId>dummy-connector</artifactId>
+	<version>1.0.0</version>
+	<packaging>bundle</packaging>
+	<name>Dummy Connector</name>
+	<description>Connector for Dummy</description>
+	<properties>
+		<connectorPackage>au.com.agiledigital.idm.connector</connectorPackage>
+		<connectorClass>DummyConnector</connectorClass>
+		<framework.compatibilityVersion>1.5</framework.compatibilityVersion>
+		<framework.releaseVersion>2.0</framework.releaseVersion>
+		<idm.interceptor.version>1.0.0</idm.interceptor.version>
+		<osgi.core.version>6.0.0</osgi.core.version>
+	</properties>
+	<repositories>
+		<repository>
+			<id>forgerock-private-releases</id>
+			<name>ForgeRock Private Releases Repository</name>
+			<url>http://maven.forgerock.org/repo/private-releases</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.forgerock.openicf.framework</groupId>
+			<artifactId>connector-framework</artifactId>
+		</dependency>
+		<dependency>
+			<version>${idm.interceptor.version}</version>
+			<groupId>au.com.agiledigital.idm</groupId>
+			<artifactId>idm-osgi-interceptor</artifactId>
+		</dependency>
+		<dependency>
+			<version>${idm.interceptor.version}</version>
+			<groupId>au.com.agiledigital.idm</groupId>
+			<artifactId>dummy-connector-api</artifactId>
+		</dependency>
+
+		<!-- Test Dependencies -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.forgerock.openicf.framework</groupId>
+			<artifactId>connector-framework-internal</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.forgerock.openicf.framework</groupId>
+			<artifactId>connector-test-common</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi.core</artifactId>
+			<version>${osgi.core.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>au.com.agiledigital.idm</groupId>
+		<artifactId>idm-interceptor-parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>idm-osgi-interceptor</artifactId>
+
+	<packaging>bundle</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>osgi.core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.dependencymanager.annotation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.forgerock.commons</groupId>
+			<artifactId>json-resource</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.forgerock.openidm</groupId>
+			<artifactId>openidm-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.forgerock.openidm</groupId>
+			<artifactId>openidm-enhanced-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.forgerock.openidm</groupId>
+			<artifactId>openidm-provisioner-openicf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.scr</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>au.com.agiledigital.idm</groupId>
+			<artifactId>dummy-connector-api</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Private-Package>au.com.agiledigital.idm</Private-Package>
+						<_plugin>org.apache.felix.dm.annotation.plugin.bnd.AnnotationPlugin;add-require-capability=true</_plugin>
+					</instructions>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.felix</groupId>
+						<artifactId>org.apache.felix.dependencymanager.annotation</artifactId>
+						<version>${felix.dependencymanager.annotation.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+</project>
