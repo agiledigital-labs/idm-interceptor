@@ -19,10 +19,12 @@ import org.identityconnectors.framework.common.objects.ObjectClass;
 import org.identityconnectors.framework.common.objects.OperationOptions;
 import org.identityconnectors.framework.common.objects.OperationalAttributeInfos;
 import org.identityconnectors.framework.common.objects.ResultsHandler;
+import org.identityconnectors.framework.common.objects.SearchResult;
 import org.identityconnectors.framework.common.objects.Uid;
 import org.identityconnectors.framework.common.objects.filter.FilterTranslator;
 import org.identityconnectors.framework.spi.Configuration;
 import org.identityconnectors.framework.spi.ConnectorClass;
+import org.identityconnectors.framework.spi.SearchResultsHandler;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -42,7 +44,7 @@ public class DummyConnector extends DummyConnectorApi {
 	private String factoryPid;
 
 	private static Logger logger = LoggerFactory.getLogger(DummyConnector.class);
-	
+
 	private SharedInterceptorStateService sharedState;
 
 	public DummyConnector() {
@@ -73,18 +75,19 @@ public class DummyConnector extends DummyConnectorApi {
 		if (_configuration.getDummyConnectorFactoryPid() == null) {
 			throw new IllegalStateException("Factory pid is missing, cannot initialise");
 		}
-		
+
 		// Lookup the shared state service
 		BundleContext context = FrameworkUtil.getBundle(SharedInterceptorStateService.class).getBundleContext();
-		ServiceReference<SharedInterceptorStateService> reference = context.getServiceReference(SharedInterceptorStateService.class);
+		ServiceReference<SharedInterceptorStateService> reference = context
+				.getServiceReference(SharedInterceptorStateService.class);
 		this.sharedState = context.getService(reference);
-		
+
 		if (this.sharedState == null) {
 			throw new IllegalStateException("Shared Interceptor State instance is missing");
 		}
 
 		this.factoryPid = _configuration.getDummyConnectorFactoryPid();
-		
+
 		this.sharedState.registerConnector(this.factoryPid, this);
 
 		logger.info("Initialising the dummy connector with factory pid: {}", this.factoryPid);
@@ -126,10 +129,14 @@ public class DummyConnector extends DummyConnectorApi {
 			builder = new ConnectorObjectBuilder();
 			builder.addAttributes(result.getValue());
 			builder.setUid(result.getKey());
-			
+
 			handler.handle(builder.build());
 		}
 
+		if (handler instanceof SearchResultsHandler && objectClassMap.entrySet().size() > -1) {
+			SearchResult searchResult = new SearchResult();
+			((SearchResultsHandler) handler).handleResult(searchResult);
+		}
 	}
 
 	public Uid update(ObjectClass objClass, Uid uid, Set<Attribute> attrs, OperationOptions options) {
@@ -144,7 +151,7 @@ public class DummyConnector extends DummyConnectorApi {
 
 		attrMap.remove(OperationalAttributeInfos.CURRENT_PASSWORD.getName());
 		object.addAll(attrMap.values());
-		
+
 		return uid;
 	}
 
