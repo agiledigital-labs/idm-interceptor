@@ -1,13 +1,13 @@
 package au.com.agiledigital.idm;
 
 import au.com.agiledigital.idm.connector.api.DummyConnectorApi;
-import au.com.agiledigital.idm.interceptor.RequestHandlerInterceptor;
+import au.com.agiledigital.idm.interceptor.ConnectorRequestHandlerInterceptor;
 
 public interface SharedInterceptorStateService {
 
-	void registerInterceptor(String factoryPid, RequestHandlerInterceptor interceptor);
+	void registerInterceptor(String factoryPid, ConnectorRequestHandlerInterceptor interceptor);
 
-	void unregisterInterceptor(String factoryPid, RequestHandlerInterceptor interceptor);
+	void unregisterInterceptor(String factoryPid, ConnectorRequestHandlerInterceptor interceptor);
 
 	void registerConnector(String factoryPid, DummyConnectorApi dummyConnector);
 

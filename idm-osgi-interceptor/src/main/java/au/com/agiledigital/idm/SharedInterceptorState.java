@@ -6,22 +6,22 @@ import org.apache.felix.dm.annotation.api.Component;
 import org.apache.felix.dm.annotation.api.ServiceScope;
 
 import au.com.agiledigital.idm.connector.api.DummyConnectorApi;
-import au.com.agiledigital.idm.interceptor.RequestHandlerInterceptor;
+import au.com.agiledigital.idm.interceptor.ConnectorRequestHandlerInterceptor;
 
 @Component(scope = ServiceScope.SINGLETON)
 public class SharedInterceptorState implements SharedInterceptorStateService {
 	
-	private ConcurrentHashMap<String, RequestHandlerInterceptor> interceptorMap = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, ConnectorRequestHandlerInterceptor> interceptorMap = new ConcurrentHashMap<>();
 
 	private ConcurrentHashMap<String, DummyConnectorApi> connectorMap = new ConcurrentHashMap<>();
 
 	@Override
-	public void registerInterceptor(String factoryPid, RequestHandlerInterceptor interceptor) {
+	public void registerInterceptor(String factoryPid, ConnectorRequestHandlerInterceptor interceptor) {
 		interceptorMap.put(factoryPid, interceptor);
 	}
 	
 	@Override
-	public void unregisterInterceptor(String factoryPid, RequestHandlerInterceptor interceptor) {
+	public void unregisterInterceptor(String factoryPid, ConnectorRequestHandlerInterceptor interceptor) {
 		interceptorMap.remove(factoryPid);
 	}
 

@@ -34,7 +34,7 @@ import au.com.agiledigital.idm.ComponentContextAdapter;
 import au.com.agiledigital.idm.SharedInterceptorStateService;
 
 //@AspectService(ranking = 10, added = "added", changed = "changed", removed = "removed", filter = "(&(objectClass=org.forgerock.json.resource.RequestHandler)(service.factoryPid=org.forgerock.openidm.provisioner.openicf))")
-public class RequestHandlerInterceptor implements RequestHandler {
+public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 	private volatile RequestHandler intercepted;
 	private volatile String factoryPid;
 	@ServiceDependency
@@ -48,7 +48,7 @@ public class RequestHandlerInterceptor implements RequestHandler {
 	
 	private Map<String, ObjectClassInfoHelper> objectClassInfoMap;
 
-	private static Logger logger = LoggerFactory.getLogger(RequestHandlerInterceptor.class);
+	private static Logger logger = LoggerFactory.getLogger(ConnectorRequestHandlerInterceptor.class);
 	
 	private Map<String, ObjectClassInfoHelper> generateObjectClassInfo(ServiceReference<?> ref) {
 		JsonValue jsonConfig = this.enhancedConfig.getConfigurationAsJson(new ComponentContextAdapter(ref));

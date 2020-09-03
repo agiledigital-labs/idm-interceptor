@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.felix.dm.annotation.api.AspectService;
 import org.forgerock.config.util.JsonValuePropertyEvaluator;
+import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.RequestHandler;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
@@ -67,7 +68,14 @@ public class EnhancedConfigInterceptor implements EnhancedConfig {
 	public JsonValue getConfigurationAsJson(ComponentContext context) throws InvalidException, InternalErrorException {
 		String factoryPid = (String) context.getProperties().get("config.factory-pid");
 		JsonValue configuration = this.intercepted.getConfigurationAsJson(context);
-		
+
+		// If connector is configured to bypass, then we won't replace the implementation with the dummy connector.
+		JsonPointer bypassPtr = JsonPointer.ptr("/dummyConnectorProperties/bypass");
+		JsonValue bypassValue = configuration.get(bypassPtr);
+		if (bypassValue != null && bypassValue.asBoolean()) {
+			return configuration;
+		}
+
 		// Override the connectorRef with the dummy connector
 		configuration.put("connectorRef", dummyConnectorRef);
 		
