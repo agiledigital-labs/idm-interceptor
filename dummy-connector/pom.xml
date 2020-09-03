@@ -17,7 +17,7 @@
 	<name>Dummy Connector</name>
 	<description>Connector for Dummy</description>
 	<properties>
-		<connectorPackage>au.com.agiledigital.idm.connector</connectorPackage>
+		<connectorPackage>au.com.agiledigital.idm.connector.dummy</connectorPackage>
 		<connectorClass>DummyConnector</connectorClass>
 		<framework.compatibilityVersion>1.5</framework.compatibilityVersion>
 		<framework.releaseVersion>2.0</framework.releaseVersion>

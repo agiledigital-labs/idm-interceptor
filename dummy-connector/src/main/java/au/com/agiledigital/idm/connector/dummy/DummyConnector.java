@@ -1,4 +1,4 @@
-package au.com.agiledigital.idm.connector;
+package au.com.agiledigital.idm.connector.dummy;
 
 import java.lang.reflect.Method;
 import java.util.Comparator;

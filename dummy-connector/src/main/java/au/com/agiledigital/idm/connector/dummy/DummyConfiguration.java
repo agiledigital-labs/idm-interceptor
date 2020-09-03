@@ -1,4 +1,4 @@
-package au.com.agiledigital.idm.connector;
+package au.com.agiledigital.idm.connector.dummy;
 
 import org.identityconnectors.framework.spi.AbstractConfiguration;
 import org.identityconnectors.framework.spi.ConfigurationProperty;

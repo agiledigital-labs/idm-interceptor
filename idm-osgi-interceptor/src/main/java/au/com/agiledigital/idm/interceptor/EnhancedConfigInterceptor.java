@@ -30,7 +30,7 @@ public class EnhancedConfigInterceptor implements EnhancedConfig {
 	
 	private Map<String, Object> dummyConnectorRef  = object(field("bundleName", "au.com.agiledigital.idm.connector.dummy-connector"),
 			field("bundleVersion", "[0.0.0,2)"),
-			field("connectorName", "au.com.agiledigital.idm.connector.DummyConnector"));
+			field("connectorName", "au.com.agiledigital.idm.connector.dummy.DummyConnector"));
 	
 	public void added(ServiceReference<RequestHandler> ref, EnhancedConfig service) {
 		this.intercepted = service;
