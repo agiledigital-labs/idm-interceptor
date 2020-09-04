@@ -1,0 +1,271 @@
+{
+    "connectorRef" : {
+        "bundleName" : "au.com.agiledigital.idm.connector.dummy-connector",
+        "bundleVersion" : "[0.0.0,2)",
+        "connectorName" : "au.com.agiledigital.idm.connector.dummy.DummyConnector"
+    },
+    "dummyConnectorProperties" : {
+        "bypass" : false,
+        "eventEndpoint" : true
+    },
+    "poolConfigOption" : {
+        "maxObjects" : 10,
+        "maxIdle" : 10,
+        "maxWait" : 150000,
+        "minEvictableIdleTimeMillis" : 120000,
+        "minIdle" : 1
+    },
+    "operationTimeout" : {
+        "CREATE" : -1,
+        "VALIDATE" : -1,
+        "TEST" : -1,
+        "SCRIPT_ON_CONNECTOR" : -1,
+        "SCHEMA" : -1,
+        "DELETE" : -1,
+        "UPDATE" : -1,
+        "SYNC" : -1,
+        "AUTHENTICATE" : -1,
+        "GET" : -1,
+        "SCRIPT_ON_RESOURCE" : -1,
+        "SEARCH" : -1
+    },
+    "configurationProperties" : { },
+    "resultsHandlerConfig" : {
+        "enableNormalizingResultsHandler" : false,
+        "enableFilteredResultsHandler" : true,
+        "enableCaseInsensitiveFilter" : false,
+        "enableAttributesToGetSearchResultsHandler" : true
+    },
+    "syncFailureHandler" : {
+        "maxRetries" : 5,
+        "postRetryAction" : "logged-ignore"
+    },
+    "objectTypes" : {
+        "create" : {
+            "$schema" : "http://json-schema.org/draft-04/schema",
+            "type" : "object",
+            "properties" : { 
+                "objectType" : {
+                    "type" : "string",
+                    "nativeName" : "__NAME__",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "responseTime" : {
+                    "type" : "string",
+                    "nativeName" : "responseTime",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "request" : {
+                    "type" : "object",
+                    "nativeName" : "request",
+                    "navtiveType" : "object",
+                    "required" : true
+                },
+                "response" : {
+                    "type" : "object",
+                    "nativeName" : "response",
+                    "navtiveType" : "object",
+                    "required" : false
+                }
+            },
+            "id" : "create",
+            "nativeType" : "create"
+        },
+        "read" : {
+            "$schema" : "http://json-schema.org/draft-04/schema",
+            "type" : "object",
+            "properties" : { 
+                "objectType" : {
+                    "type" : "string",
+                    "nativeName" : "__NAME__",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "responseTime" : {
+                    "type" : "string",
+                    "nativeName" : "responseTime",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "request" : {
+                    "type" : "object",
+                    "nativeName" : "request",
+                    "navtiveType" : "object",
+                    "required" : true
+                },
+                "response" : {
+                    "type" : "object",
+                    "nativeName" : "response",
+                    "navtiveType" : "object",
+                    "required" : false
+                }
+            },
+            "id" : "read",
+            "nativeType" : "read"
+        },
+        "query" : {
+            "$schema" : "http://json-schema.org/draft-04/schema",
+            "type" : "object",
+            "properties" : { 
+                "objectType" : {
+                    "type" : "string",
+                    "nativeName" : "__NAME__",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "responseTime" : {
+                    "type" : "string",
+                    "nativeName" : "responseTime",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "request" : {
+                    "type" : "object",
+                    "nativeName" : "request",
+                    "navtiveType" : "object",
+                    "required" : true
+                },
+                "response" : {
+                    "type" : "object",
+                    "nativeName" : "response",
+                    "navtiveType" : "object",
+                    "required" : false
+                }
+            },
+            "id" : "query",
+            "nativeType" : "query"
+        },
+        "update" : {
+            "$schema" : "http://json-schema.org/draft-04/schema",
+            "type" : "object",
+            "properties" : { 
+                "objectType" : {
+                    "type" : "string",
+                    "nativeName" : "__NAME__",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "responseTime" : {
+                    "type" : "string",
+                    "nativeName" : "responseTime",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "request" : {
+                    "type" : "object",
+                    "nativeName" : "request",
+                    "navtiveType" : "object",
+                    "required" : true
+                },
+                "response" : {
+                    "type" : "object",
+                    "nativeName" : "response",
+                    "navtiveType" : "object",
+                    "required" : false
+                }
+            },
+            "id" : "update",
+            "nativeType" : "update"
+        },
+        "delete" : {
+            "$schema" : "http://json-schema.org/draft-04/schema",
+            "type" : "object",
+            "properties" : { 
+                "objectType" : {
+                    "type" : "string",
+                    "nativeName" : "__NAME__",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "responseTime" : {
+                    "type" : "string",
+                    "nativeName" : "responseTime",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "request" : {
+                    "type" : "object",
+                    "nativeName" : "request",
+                    "navtiveType" : "object",
+                    "required" : true
+                },
+                "response" : {
+                    "type" : "object",
+                    "nativeName" : "response",
+                    "navtiveType" : "object",
+                    "required" : false
+                }
+            },
+            "id" : "delete",
+            "nativeType" : "delete"
+        },
+        "patch" : {
+            "$schema" : "http://json-schema.org/draft-04/schema",
+            "type" : "object",
+            "properties" : { 
+                "objectType" : {
+                    "type" : "string",
+                    "nativeName" : "__NAME__",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "responseTime" : {
+                    "type" : "string",
+                    "nativeName" : "responseTime",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "request" : {
+                    "type" : "object",
+                    "nativeName" : "request",
+                    "navtiveType" : "object",
+                    "required" : true
+                },
+                "response" : {
+                    "type" : "object",
+                    "nativeName" : "response",
+                    "navtiveType" : "object",
+                    "required" : false
+                }
+            },
+            "id" : "patch",
+            "nativeType" : "patch"
+        },
+        "action" : {
+            "$schema" : "http://json-schema.org/draft-04/schema",
+            "type" : "object",
+            "properties" : { 
+                "objectType" : {
+                    "type" : "string",
+                    "nativeName" : "__NAME__",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "responseTime" : {
+                    "type" : "string",
+                    "nativeName" : "responseTime",
+                    "navtiveType" : "string",
+                    "required" : true
+                },
+                "request" : {
+                    "type" : "object",
+                    "nativeName" : "request",
+                    "navtiveType" : "object",
+                    "required" : true
+                },
+                "response" : {
+                    "type" : "object",
+                    "nativeName" : "response",
+                    "navtiveType" : "object",
+                    "required" : false
+                }
+            },
+            "id" : "action",
+            "nativeType" : "action"
+        }
+    },
+    "operationOptions" : { },
+    "enabled" : true
+}

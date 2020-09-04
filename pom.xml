@@ -14,6 +14,17 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<openidm.version>6.5.0.4</openidm.version>
 		<felix.dependencymanager.annotation.version>5.0.1</felix.dependencymanager.annotation.version>
+
+		<!-- OSGi bundles properties -->
+		<openidm.osgi.import.before.defaults />
+		<openidm.osgi.import.defaults />
+		<openidm.osgi.import.additional />
+		<openidm.osgi.import>
+			${openidm.osgi.import.before.defaults},
+			${openidm.osgi.import.defaults},
+			${openidm.osgi.import.additional},
+			*
+		</openidm.osgi.import>
 	</properties>
 
 	<repositories>
@@ -87,8 +98,27 @@
 			<plugins>
 				<plugin>
 					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-scr-plugin</artifactId>
+					<version>1.22.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>5.1.1</version>
+					<!-- version >= 2.5.4 introduces timestamp bug on UI files - see OPENIDM-5264 -->
+					<version>2.5.3</version>
+					<extensions>true</extensions>
+					<configuration>
+						<instructions>
+							<Import-Package>${openidm.osgi.import}</Import-Package>
+							<!--_versionpolicy>${openidm.osgi.import.default.version}</_versionpolicy-->
+							<_nodefaultversion>false</_nodefaultversion>
+							<_metatype>**/*MetaType*</_metatype>
+							<_removeheaders>
+								Bnd-LastModified,Built-By,Private-Package,Tool,Build-Jdk,Include-Resource,Ignore-Package,Private-Package,Bundle-DocURL
+							</_removeheaders>
+							<Include-Resource>{maven-resources}</Include-Resource>
+						</instructions>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>

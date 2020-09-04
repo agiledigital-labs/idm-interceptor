@@ -49,17 +49,34 @@
 			<groupId>au.com.agiledigital.idm</groupId>
 			<artifactId>dummy-connector-api</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-scr-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-scr-scrdescriptor</id>
+						<goals>
+							<goal>scr</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Private-Package>au.com.agiledigital.idm</Private-Package>
+						<DynamicImport-Package>*</DynamicImport-Package>
 						<_plugin>org.apache.felix.dm.annotation.plugin.bnd.AnnotationPlugin;add-require-capability=true</_plugin>
 					</instructions>
 				</configuration>
