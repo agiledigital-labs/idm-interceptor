@@ -1,10 +1,7 @@
 package au.com.agiledigital.idm.interceptor;
 
-import java.util.Map;
-import java.util.Set;
-
+import org.apache.felix.dm.annotation.api.AspectService;
 import org.apache.felix.dm.annotation.api.ServiceDependency;
-import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.CreateRequest;
@@ -14,26 +11,23 @@ import org.forgerock.json.resource.QueryRequest;
 import org.forgerock.json.resource.QueryResourceHandler;
 import org.forgerock.json.resource.QueryResponse;
 import org.forgerock.json.resource.ReadRequest;
+import org.forgerock.json.resource.Request;
 import org.forgerock.json.resource.RequestHandler;
 import org.forgerock.json.resource.ResourceException;
-import org.forgerock.json.resource.ResourcePath;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.crypto.CryptoService;
-import org.forgerock.openidm.provisioner.openicf.commons.ConnectorUtil;
-import org.forgerock.openidm.provisioner.openicf.commons.ObjectClassInfoHelper;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
-import org.identityconnectors.framework.common.objects.Attribute;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import au.com.agiledigital.idm.ComponentContextAdapter;
+import au.com.agiledigital.idm.EventType;
 import au.com.agiledigital.idm.SharedInterceptorStateService;
 
-//@AspectService(ranking = 10, added = "added", changed = "changed", removed = "removed", filter = "(&(objectClass=org.forgerock.json.resource.RequestHandler)(service.factoryPid=org.forgerock.openidm.provisioner.openicf))")
+@AspectService(ranking = 1, added = "added", changed = "changed", removed = "removed", filter = "(&(objectClass=org.forgerock.json.resource.RequestHandler)(service.factoryPid=org.forgerock.openidm.provisioner.openicf))")
 public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 	private volatile RequestHandler intercepted;
 	private volatile String factoryPid;
@@ -46,24 +40,14 @@ public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 	@ServiceDependency
 	private SharedInterceptorStateService sharedState;
 	
-	private Map<String, ObjectClassInfoHelper> objectClassInfoMap;
-
 	private static Logger logger = LoggerFactory.getLogger(ConnectorRequestHandlerInterceptor.class);
 	
-	private Map<String, ObjectClassInfoHelper> generateObjectClassInfo(ServiceReference<?> ref) {
-		JsonValue jsonConfig = this.enhancedConfig.getConfigurationAsJson(new ComponentContextAdapter(ref));
-		Map<String, ObjectClassInfoHelper> objectTypes = ConnectorUtil.getObjectTypes(jsonConfig);
-		
-		return objectTypes;
-	}
-	
-	private ObjectClassInfoHelper getObjectClassInfoHelper(ResourcePath resourcePath) {
-		return objectClassInfoMap.get(resourcePath.get(0));
+	public RequestHandler getUnderlyingService() {
+		return this.intercepted;
 	}
 
 	public void added(ServiceReference<RequestHandler> ref, RequestHandler service) {
 		String factoryPid = (String) ref.getProperty("config.factory-pid");
-		this.objectClassInfoMap = generateObjectClassInfo(ref);
 		this.factoryPid = factoryPid;
 		this.intercepted = service;
 		this.sharedState.registerInterceptor(factoryPid, this);
@@ -73,7 +57,6 @@ public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 
 	public void changed(ServiceReference<RequestHandler> ref, RequestHandler service) {
 		String factoryPid = (String) ref.getProperty("config.factory-pid");
-		this.objectClassInfoMap = generateObjectClassInfo(ref);
 		this.factoryPid = factoryPid;
 		this.intercepted = service;
 		
@@ -84,7 +67,6 @@ public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 		String factoryPid = (String) ref.getProperty("config.factory-pid");
 		this.intercepted = null;
 		this.factoryPid = null;
-		this.objectClassInfoMap = null;
 		
 		this.sharedState.unregisterInterceptor(factoryPid, this);
 		
@@ -97,10 +79,15 @@ public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 		}
 	}
 
+	private void logEvent(EventType eventType, Context context, Request request) {
+		this.sharedState.logEvent(this.factoryPid, eventType.getName(), context, request);
+	}
+
 	@Override
 	public Promise<ActionResponse, ResourceException> handleAction(Context context, ActionRequest request) {
 		ensureHasValue();
 		logger.info("About to execute action for {}", factoryPid);
+		this.logEvent(EventType.ACTION, context, request);
 		return intercepted.handleAction(context, request);
 	}
 
@@ -108,24 +95,16 @@ public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 	public Promise<ResourceResponse, ResourceException> handleRead(Context context, ReadRequest request) {
 		ensureHasValue();
 		logger.info("About to read for {}", factoryPid);
-		Promise<ResourceResponse, ResourceException> handleRead = intercepted.handleRead(context, request);
-		return handleRead;
+		this.logEvent(EventType.READ, context, request);
+		return intercepted.handleRead(context, request);
 	}
 	
 	@Override
 	public Promise<ResourceResponse, ResourceException> handleCreate(Context context, CreateRequest request) {
 		ensureHasValue();
 		logger.info("About to create for {}", factoryPid);
-		
-		ObjectClassInfoHelper helper = getObjectClassInfoHelper(request.getResourcePathObject());
-		
-		try {
-			Set<Attribute> createAttributes = helper.getCreateAttributes(request, this.cryptoService);
-			logger.info("Create attributes {}", createAttributes);
-		} catch (ResourceException e) {
-			return e.asPromise();
-		}
-		
+		this.logEvent(EventType.CREATE, context, request);
+
 		return intercepted.handleCreate(context, request);
 	}
 	
@@ -133,6 +112,7 @@ public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 	public Promise<ResourceResponse, ResourceException> handleDelete(Context context, DeleteRequest request) {
 		ensureHasValue();
 		logger.info("About to delete for {}", factoryPid);
+		this.logEvent(EventType.DELETE, context, request);
 		return intercepted.handleDelete(context, request);
 	}
 	
@@ -140,6 +120,7 @@ public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 	public Promise<ResourceResponse, ResourceException> handlePatch(Context context, PatchRequest request) {
 		ensureHasValue();
 		logger.info("About to Patch for {}", factoryPid);
+		this.logEvent(EventType.PATCH, context, request);
 		return intercepted.handlePatch(context, request);
 	}
 	
@@ -148,6 +129,7 @@ public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 			QueryResourceHandler handler) {
 		ensureHasValue();
 		logger.info("About to Query for {}", factoryPid);
+		this.logEvent(EventType.QUERY, context, request);
 		return intercepted.handleQuery(context, request, handler);
 	}
 	
@@ -155,6 +137,7 @@ public class ConnectorRequestHandlerInterceptor implements RequestHandler {
 	public Promise<ResourceResponse, ResourceException> handleUpdate(Context context, UpdateRequest request) {
 		ensureHasValue();
 		logger.info("About to Update for {}", factoryPid);
+		this.logEvent(EventType.UPDATE, context, request);
 		return intercepted.handleUpdate(context, request);
 	}
 }

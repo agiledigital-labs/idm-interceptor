@@ -24,7 +24,13 @@ import org.identityconnectors.framework.common.objects.Uid;
 import org.identityconnectors.framework.common.objects.filter.FilterTranslator;
 import org.identityconnectors.framework.spi.Configuration;
 import org.identityconnectors.framework.spi.ConnectorClass;
+import org.identityconnectors.framework.spi.PoolableConnector;
 import org.identityconnectors.framework.spi.SearchResultsHandler;
+import org.identityconnectors.framework.spi.operations.CreateOp;
+import org.identityconnectors.framework.spi.operations.DeleteOp;
+import org.identityconnectors.framework.spi.operations.SearchOp;
+import org.identityconnectors.framework.spi.operations.TestOp;
+import org.identityconnectors.framework.spi.operations.UpdateOp;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -35,7 +41,7 @@ import au.com.agiledigital.idm.SharedInterceptorStateService;
 import au.com.agiledigital.idm.connector.api.DummyConnectorApi;
 
 @ConnectorClass(displayNameKey = "DummyConnector", configurationClass = DummyConfiguration.class)
-public class DummyConnector extends DummyConnectorApi {
+public class DummyConnector implements DummyConnectorApi, PoolableConnector, CreateOp, DeleteOp, SearchOp<String>, UpdateOp, TestOp {
 
 	private ConcurrentMap<ObjectClass, ConcurrentMap<Uid, Set<Attribute>>> data = new ConcurrentHashMap<>();
 
@@ -73,24 +79,25 @@ public class DummyConnector extends DummyConnectorApi {
 		_configuration = (DummyConfiguration) cfg;
 
 		if (_configuration.getDummyConnectorFactoryPid() == null) {
-			throw new IllegalStateException("Factory pid is missing, cannot initialise");
+			logger.warn("Factory pid is missing cannot fully initialise");
+		} else {
+
+			// Lookup the shared state service
+			BundleContext context = FrameworkUtil.getBundle(SharedInterceptorStateService.class).getBundleContext();
+			ServiceReference<SharedInterceptorStateService> reference = context
+					.getServiceReference(SharedInterceptorStateService.class);
+			this.sharedState = context.getService(reference);
+
+			if (this.sharedState == null) {
+				throw new IllegalStateException("Shared Interceptor State instance is missing");
+			}
+
+			this.factoryPid = _configuration.getDummyConnectorFactoryPid();
+
+			this.sharedState.registerConnector(this.factoryPid, this);
+
+			logger.info("Initialising the dummy connector with factory pid: {}", this.factoryPid);
 		}
-
-		// Lookup the shared state service
-		BundleContext context = FrameworkUtil.getBundle(SharedInterceptorStateService.class).getBundleContext();
-		ServiceReference<SharedInterceptorStateService> reference = context
-				.getServiceReference(SharedInterceptorStateService.class);
-		this.sharedState = context.getService(reference);
-
-		if (this.sharedState == null) {
-			throw new IllegalStateException("Shared Interceptor State instance is missing");
-		}
-
-		this.factoryPid = _configuration.getDummyConnectorFactoryPid();
-
-		this.sharedState.registerConnector(this.factoryPid, this);
-
-		logger.info("Initialising the dummy connector with factory pid: {}", this.factoryPid);
 	}
 
 	public Uid create(ObjectClass objClass, Set<Attribute> attrs, OperationOptions options) {

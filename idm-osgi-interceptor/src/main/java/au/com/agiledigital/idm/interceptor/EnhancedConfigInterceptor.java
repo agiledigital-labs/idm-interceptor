@@ -7,7 +7,9 @@ import static org.forgerock.json.JsonValue.object;
 import java.util.Dictionary;
 import java.util.Map;
 
+import au.com.agiledigital.idm.SharedInterceptorStateService;
 import org.apache.felix.dm.annotation.api.AspectService;
+import org.apache.felix.dm.annotation.api.ServiceDependency;
 import org.forgerock.config.util.JsonValuePropertyEvaluator;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
@@ -25,6 +27,9 @@ import org.slf4j.LoggerFactory;
 public class EnhancedConfigInterceptor implements EnhancedConfig {
 
 	private volatile EnhancedConfig intercepted;
+
+	@ServiceDependency
+	private SharedInterceptorStateService sharedState;
 	
 	private static Logger logger = LoggerFactory.getLogger(EnhancedConfigInterceptor.class);
 	
@@ -70,8 +75,7 @@ public class EnhancedConfigInterceptor implements EnhancedConfig {
 		JsonValue configuration = this.intercepted.getConfigurationAsJson(context);
 
 		// If connector is configured to bypass, then we won't replace the implementation with the dummy connector.
-		JsonPointer bypassPtr = JsonPointer.ptr("/dummyConnectorProperties/bypass");
-		JsonValue bypassValue = configuration.get(bypassPtr);
+		JsonValue bypassValue = configuration.get(JsonPointer.ptr("/dummyConnectorProperties/bypass"));
 		if (bypassValue != null && bypassValue.asBoolean()) {
 			return configuration;
 		}
@@ -97,6 +101,12 @@ public class EnhancedConfigInterceptor implements EnhancedConfig {
 		// The dummy connector doesn't support filtering and returns all results, so we need to turn on filtering
 		// from the results handler
 		resultsHandlerConfig.put("enableFilteredResultsHandler", true);
+
+		// If this is the event endpoint, then register it with the shared state.
+		JsonValue eventValue = configuration.get(JsonPointer.ptr("/dummyConnectorProperties/eventEndpoint"));
+		if (eventValue != null && eventValue.asBoolean()) {
+			sharedState.setEventEndpoint(factoryPid);
+		}
 
 		return configuration;
 	}
