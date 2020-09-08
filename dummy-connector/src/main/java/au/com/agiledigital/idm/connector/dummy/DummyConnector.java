@@ -1,36 +1,24 @@
 package au.com.agiledigital.idm.connector.dummy;
 
 import java.lang.reflect.Method;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.identityconnectors.common.script.ScriptExecutor;
+import org.identityconnectors.common.script.ScriptExecutorFactory;
 import org.identityconnectors.framework.common.exceptions.AlreadyExistsException;
+import org.identityconnectors.framework.common.exceptions.ConnectorException;
+import org.identityconnectors.framework.common.exceptions.PreconditionFailedException;
 import org.identityconnectors.framework.common.exceptions.UnknownUidException;
-import org.identityconnectors.framework.common.objects.Attribute;
-import org.identityconnectors.framework.common.objects.AttributeUtil;
-import org.identityconnectors.framework.common.objects.ConnectorObjectBuilder;
-import org.identityconnectors.framework.common.objects.ObjectClass;
-import org.identityconnectors.framework.common.objects.OperationOptions;
-import org.identityconnectors.framework.common.objects.OperationalAttributeInfos;
-import org.identityconnectors.framework.common.objects.ResultsHandler;
-import org.identityconnectors.framework.common.objects.SearchResult;
-import org.identityconnectors.framework.common.objects.Uid;
+import org.identityconnectors.framework.common.objects.*;
 import org.identityconnectors.framework.common.objects.filter.FilterTranslator;
 import org.identityconnectors.framework.spi.Configuration;
 import org.identityconnectors.framework.spi.ConnectorClass;
 import org.identityconnectors.framework.spi.PoolableConnector;
 import org.identityconnectors.framework.spi.SearchResultsHandler;
-import org.identityconnectors.framework.spi.operations.CreateOp;
-import org.identityconnectors.framework.spi.operations.DeleteOp;
-import org.identityconnectors.framework.spi.operations.SearchOp;
-import org.identityconnectors.framework.spi.operations.TestOp;
-import org.identityconnectors.framework.spi.operations.UpdateOp;
+import org.identityconnectors.framework.spi.operations.*;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -41,7 +29,7 @@ import au.com.agiledigital.idm.SharedInterceptorStateService;
 import au.com.agiledigital.idm.connector.api.DummyConnectorApi;
 
 @ConnectorClass(displayNameKey = "DummyConnector", configurationClass = DummyConfiguration.class)
-public class DummyConnector implements DummyConnectorApi, PoolableConnector, CreateOp, DeleteOp, SearchOp<String>, UpdateOp, TestOp {
+public class DummyConnector implements DummyConnectorApi, PoolableConnector, CreateOp, DeleteOp, SearchOp<String>, UpdateOp, TestOp, ScriptOnConnectorOp, ScriptOnResourceOp {
 
 	private ConcurrentMap<ObjectClass, ConcurrentMap<Uid, Set<Attribute>>> data = new ConcurrentHashMap<>();
 
@@ -162,6 +150,64 @@ public class DummyConnector implements DummyConnectorApi, PoolableConnector, Cre
 		return uid;
 	}
 
+	@Override
+	public Object runScriptOnConnector(ScriptContext scriptContext, OperationOptions operationOptions) {
+		logger.info("Running script on connector");
+		return runScript(scriptContext, operationOptions);
+	}
+
+	private Object runScript(ScriptContext scriptContext, OperationOptions operationOptions) {
+		if ("fixed".equals(scriptContext.getScriptLanguage())) {
+			return runFixedAction(scriptContext, operationOptions);
+		} else {
+			return executeScript(scriptContext, operationOptions);
+		}
+	}
+
+	@Override
+	public Object runScriptOnResource(ScriptContext scriptContext, OperationOptions operationOptions) {
+		logger.info("Running script on resource");
+		return runScript(scriptContext, operationOptions);
+	}
+
+	private Object runFixedAction(ScriptContext scriptContext, OperationOptions operationOptions) {
+		switch(FixedAction.valueOf(scriptContext.getScriptText())) {
+			case CLEAR_DATA:
+				return this.clearData();
+			case CLEAR_ALL_DUMMY_CONNECTOR_DATA:
+				return this.sharedState.clearAllConnectorData();
+			default:
+				throw new PreconditionFailedException("Unsupported FixedAction: " + scriptContext.getScriptText());
+		}
+	}
+
+	@Override
+	public String clearData() {
+		int numElements = this.data.entrySet().stream().mapToInt(e -> e.getValue().size()).reduce(0, (subtotal, size) -> subtotal + size);
+		this.data.clear();
+		return "Removed " + numElements;
+	}
+
+	private Object executeScript(ScriptContext request, OperationOptions operationOptions) {
+		ScriptExecutorFactory factory = ScriptExecutorFactory.newInstance(request.getScriptLanguage());
+		ScriptExecutor executor = factory.newScriptExecutor(this.getClass().getClassLoader(), request.getScriptText(), true);
+		Map<String, Object> bindings = new HashMap();
+		for (Entry<String, Object> arg : request.getScriptArguments().entrySet()) {
+			bindings.put(arg.getKey(), arg.getValue());
+		}
+
+		bindings.put("connector", this);
+
+		try {
+			return executor.execute(bindings);
+		} catch (Exception ex) {
+			logger.error("Failed to execute Script", ex);
+			throw ConnectorException.wrap(ex);
+		}
+	}
+
+
+
 	static class MethodComparator implements Comparator<Method> {
 		public int compare(Method o1, Method o2) {
 			return o1.getName().compareTo(o2.getName());
@@ -174,4 +220,9 @@ public class DummyConnector implements DummyConnectorApi, PoolableConnector, Cre
 		// Nothing to do
 	}
 
+}
+
+enum FixedAction {
+	CLEAR_DATA,
+	CLEAR_ALL_DUMMY_CONNECTOR_DATA
 }

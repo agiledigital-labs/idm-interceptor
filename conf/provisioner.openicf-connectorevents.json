@@ -40,6 +40,28 @@
         "maxRetries" : 5,
         "postRetryAction" : "logged-ignore"
     },
+    "systemActions" : [
+        {
+            "scriptId" : "clearEvents",
+            "actions" : [
+                {
+                    "systemType" : ".*DummyConnector",
+                    "actionType" : "fixed",
+                    "actionSource" : "CLEAR_DATA"
+                }
+            ]
+        },
+        {
+            "scriptId" : "clearAllDummyConnectors",
+            "actions" : [
+                {
+                    "systemType" : ".*DummyConnector",
+                    "actionType" : "fixed",
+                    "actionSource" : "CLEAR_ALL_DUMMY_CONNECTOR_DATA"
+                }
+            ]
+        }
+    ],
     "objectTypes" : {
         "create" : {
             "$schema" : "http://json-schema.org/draft-04/schema",

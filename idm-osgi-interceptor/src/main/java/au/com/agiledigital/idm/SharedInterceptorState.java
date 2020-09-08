@@ -1,5 +1,6 @@
 package au.com.agiledigital.idm;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,5 +38,12 @@ public class SharedInterceptorState implements SharedInterceptorStateService {
 	@Override
 	public Optional<String> getEventEndpoint() {
 		return Optional.ofNullable(this.eventEndpoint);
+	}
+
+	@Override
+	public Map<String, String> clearAllConnectorData() {
+		Map<String, String> results = new ConcurrentHashMap<>();
+		this.connectorMap.entrySet().parallelStream().forEach(entry -> results.put(entry.getKey(), entry.getValue().clearData()));
+		return results;
 	}
 }
