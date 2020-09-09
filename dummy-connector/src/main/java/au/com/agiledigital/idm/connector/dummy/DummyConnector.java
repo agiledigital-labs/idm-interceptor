@@ -185,6 +185,7 @@ public class DummyConnector implements DummyConnectorApi, PoolableConnector, Cre
 	public String clearData() {
 		int numElements = this.data.entrySet().stream().mapToInt(e -> e.getValue().size()).reduce(0, (subtotal, size) -> subtotal + size);
 		this.data.clear();
+		logger.info("Clearing {} records from {}", numElements, this.factoryPid);
 		return "Removed " + numElements;
 	}
 
