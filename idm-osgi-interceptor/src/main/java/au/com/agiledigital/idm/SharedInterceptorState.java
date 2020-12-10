@@ -6,15 +6,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.felix.dm.annotation.api.Component;
 import org.apache.felix.dm.annotation.api.ServiceScope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import au.com.agiledigital.idm.connector.api.DummyConnectorApi;
 
 @Component(scope = ServiceScope.SINGLETON)
 public class SharedInterceptorState implements SharedInterceptorStateService {
-
-	private static Logger logger = LoggerFactory.getLogger(SharedInterceptorState.class);
 
 	private ConcurrentHashMap<String, DummyConnectorApi> connectorMap = new ConcurrentHashMap<>();
 

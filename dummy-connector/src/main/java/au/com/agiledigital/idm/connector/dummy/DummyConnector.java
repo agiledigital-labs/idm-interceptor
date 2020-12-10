@@ -1,8 +1,10 @@
 package au.com.agiledigital.idm.connector.dummy;
 
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -12,13 +14,28 @@ import org.identityconnectors.framework.common.exceptions.AlreadyExistsException
 import org.identityconnectors.framework.common.exceptions.ConnectorException;
 import org.identityconnectors.framework.common.exceptions.PreconditionFailedException;
 import org.identityconnectors.framework.common.exceptions.UnknownUidException;
-import org.identityconnectors.framework.common.objects.*;
+import org.identityconnectors.framework.common.objects.Attribute;
+import org.identityconnectors.framework.common.objects.AttributeUtil;
+import org.identityconnectors.framework.common.objects.ConnectorObjectBuilder;
+import org.identityconnectors.framework.common.objects.ObjectClass;
+import org.identityconnectors.framework.common.objects.OperationOptions;
+import org.identityconnectors.framework.common.objects.OperationalAttributeInfos;
+import org.identityconnectors.framework.common.objects.ResultsHandler;
+import org.identityconnectors.framework.common.objects.ScriptContext;
+import org.identityconnectors.framework.common.objects.SearchResult;
+import org.identityconnectors.framework.common.objects.Uid;
 import org.identityconnectors.framework.common.objects.filter.FilterTranslator;
 import org.identityconnectors.framework.spi.Configuration;
 import org.identityconnectors.framework.spi.ConnectorClass;
 import org.identityconnectors.framework.spi.PoolableConnector;
 import org.identityconnectors.framework.spi.SearchResultsHandler;
-import org.identityconnectors.framework.spi.operations.*;
+import org.identityconnectors.framework.spi.operations.CreateOp;
+import org.identityconnectors.framework.spi.operations.DeleteOp;
+import org.identityconnectors.framework.spi.operations.ScriptOnConnectorOp;
+import org.identityconnectors.framework.spi.operations.ScriptOnResourceOp;
+import org.identityconnectors.framework.spi.operations.SearchOp;
+import org.identityconnectors.framework.spi.operations.TestOp;
+import org.identityconnectors.framework.spi.operations.UpdateOp;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -192,7 +209,7 @@ public class DummyConnector implements DummyConnectorApi, PoolableConnector, Cre
 	private Object executeScript(ScriptContext request, OperationOptions operationOptions) {
 		ScriptExecutorFactory factory = ScriptExecutorFactory.newInstance(request.getScriptLanguage());
 		ScriptExecutor executor = factory.newScriptExecutor(this.getClass().getClassLoader(), request.getScriptText(), true);
-		Map<String, Object> bindings = new HashMap();
+		Map<String, Object> bindings = new HashMap<>();
 		for (Entry<String, Object> arg : request.getScriptArguments().entrySet()) {
 			bindings.put(arg.getKey(), arg.getValue());
 		}
@@ -207,20 +224,10 @@ public class DummyConnector implements DummyConnectorApi, PoolableConnector, Cre
 		}
 	}
 
-
-
-	static class MethodComparator implements Comparator<Method> {
-		public int compare(Method o1, Method o2) {
-			return o1.getName().compareTo(o2.getName());
-		}
-
-	}
-
 	@Override
 	public void test() {
 		// Nothing to do
 	}
-
 }
 
 enum FixedAction {

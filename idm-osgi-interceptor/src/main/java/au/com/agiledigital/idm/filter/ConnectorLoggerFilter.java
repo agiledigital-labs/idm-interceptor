@@ -7,7 +7,6 @@ import static org.forgerock.json.JsonValue.object;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -20,7 +19,31 @@ import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
 import org.forgerock.json.JsonValue;
-import org.forgerock.json.resource.*;
+import org.forgerock.json.resource.AbstractAsynchronousConnection;
+import org.forgerock.json.resource.ActionRequest;
+import org.forgerock.json.resource.ActionResponse;
+import org.forgerock.json.resource.Connection;
+import org.forgerock.json.resource.ConnectionFactory;
+import org.forgerock.json.resource.CreateRequest;
+import org.forgerock.json.resource.DeleteRequest;
+import org.forgerock.json.resource.Filter;
+import org.forgerock.json.resource.FilterCondition;
+import org.forgerock.json.resource.Filters;
+import org.forgerock.json.resource.PatchRequest;
+import org.forgerock.json.resource.PreconditionFailedException;
+import org.forgerock.json.resource.QueryRequest;
+import org.forgerock.json.resource.QueryResourceHandler;
+import org.forgerock.json.resource.QueryResponse;
+import org.forgerock.json.resource.ReadRequest;
+import org.forgerock.json.resource.Request;
+import org.forgerock.json.resource.RequestHandler;
+import org.forgerock.json.resource.Requests;
+import org.forgerock.json.resource.ResourceException;
+import org.forgerock.json.resource.ResourcePath;
+import org.forgerock.json.resource.ResourceResponse;
+import org.forgerock.json.resource.Response;
+import org.forgerock.json.resource.Responses;
+import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.router.RouterFilterRegistration;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.Reject;
@@ -101,7 +124,6 @@ public class ConnectorLoggerFilter implements Filter {
 
 	private final FilterCondition isConnector = (context, request) -> {
 		ResourcePath pathObject = request.getResourcePathObject();
-		Optional<String> eventEndpoint = this.sharedState.getEventEndpoint();
 
 		// We only care about connectors and we don't want to filter the event endpoint
 		// otherwise we'd get into a loop.
