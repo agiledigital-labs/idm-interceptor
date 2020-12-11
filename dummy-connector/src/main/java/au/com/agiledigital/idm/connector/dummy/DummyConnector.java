@@ -1,6 +1,7 @@
 package au.com.agiledigital.idm.connector.dummy;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -19,7 +20,6 @@ import org.identityconnectors.framework.common.objects.AttributeUtil;
 import org.identityconnectors.framework.common.objects.ConnectorObjectBuilder;
 import org.identityconnectors.framework.common.objects.ObjectClass;
 import org.identityconnectors.framework.common.objects.OperationOptions;
-import org.identityconnectors.framework.common.objects.OperationalAttributeInfos;
 import org.identityconnectors.framework.common.objects.ResultsHandler;
 import org.identityconnectors.framework.common.objects.ScriptContext;
 import org.identityconnectors.framework.common.objects.SearchResult;
@@ -48,7 +48,10 @@ import au.com.agiledigital.idm.connector.api.DummyConnectorApi;
 @ConnectorClass(displayNameKey = "DummyConnector", configurationClass = DummyConfiguration.class)
 public class DummyConnector implements DummyConnectorApi, PoolableConnector, CreateOp, DeleteOp, SearchOp<String>, UpdateOp, TestOp, ScriptOnConnectorOp, ScriptOnResourceOp {
 
-	private ConcurrentMap<ObjectClass, ConcurrentMap<Uid, Set<Attribute>>> data = new ConcurrentHashMap<>();
+	/**
+	 * This gets initialised during init.
+	 */
+	private ConcurrentMap<ObjectClass, ConcurrentMap<Uid, Set<Attribute>>> data = null;
 
 	private DummyConfiguration _configuration = null;
 
@@ -99,7 +102,8 @@ public class DummyConnector implements DummyConnectorApi, PoolableConnector, Cre
 
 			this.factoryPid = _configuration.getDummyConnectorFactoryPid();
 
-			this.sharedState.registerConnector(this.factoryPid, this);
+			// We want to make sure that we use the same concurrent map, so the shared state is responsible for creating the maps.
+			this.data = this.sharedState.registerConnector(this.factoryPid, this);
 
 			logger.info("Initialising the dummy connector with factory pid: {}", this.factoryPid);
 		}
@@ -160,9 +164,9 @@ public class DummyConnector implements DummyConnectorApi, PoolableConnector, Cre
 		}
 
 		Map<String, Attribute> attrMap = new HashMap<String, Attribute>(AttributeUtil.toMap(object));
+		attrMap.putAll(AttributeUtil.toMap(attrs));
 
-		attrMap.remove(OperationalAttributeInfos.CURRENT_PASSWORD.getName());
-		object.addAll(attrMap.values());
+		objectClassMap.put(uid, new HashSet<>(attrMap.values()));
 
 		return uid;
 	}

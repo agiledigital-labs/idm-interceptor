@@ -14,6 +14,8 @@ Build this repo with `mvn clean install` and copy these files to your IDM bundle
 * dummy-connector-api-1.0.0.jar
 * idm-osgi-interceptor-1.0.0.jar
 
+Copy `dummy-connector-1.0.0.jar` to the IDM connectors directory, eg: `openidm/connectors/`.
+
 Find these jars on maven and copy to your IDM bundle directory, eg: `openidm/bundle/`:
 
 * org.apache.felix.dependencymanager.runtime-4.0.7.jar

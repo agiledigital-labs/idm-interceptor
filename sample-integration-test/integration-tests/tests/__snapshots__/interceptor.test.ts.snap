@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Existing data in LDAP, updates are performed updated in LDAP: Expected LDAP Updated Account [bjensen] 1`] = `
+Object {
+  "_id": Any<String>,
+  "description": "Created By CSV",
+  "dn": "uid=bjensen,ou=people,dc=agiledigital,dc=com,dc=au",
+  "givenName": "Barbara",
+  "mail": "bjensen@example.com",
+  "sn": "Jensen",
+  "telephoneNumber": "1234567",
+  "uid": "bjensen",
+}
+`;
+
+exports[`Existing data in LDAP, updates are performed updated in LDAP: Expected LDAP Updated Account [scarter] 1`] = `
+Object {
+  "_id": Any<String>,
+  "description": "Created By CSV",
+  "dn": "uid=scarter,ou=people,dc=agiledigital,dc=com,dc=au",
+  "givenName": "Steven",
+  "mail": "scarter@example.com",
+  "sn": "Carter",
+  "telephoneNumber": "1234567",
+  "uid": "scarter",
+}
+`;
+
+exports[`No data in LDAP, creates are performed created in LDAP: Expected LDAP Created Account [bjensen] 1`] = `
+Object {
+  "_id": Any<String>,
+  "description": "Created By CSV",
+  "dn": "uid=bjensen,ou=people,dc=agiledigital,dc=com,dc=au",
+  "givenName": "Barbara",
+  "mail": "bjensen@example.com",
+  "sn": "Jensen",
+  "telephoneNumber": "1234567",
+  "uid": "bjensen",
+}
+`;
+
+exports[`No data in LDAP, creates are performed created in LDAP: Expected LDAP Created Account [scarter] 1`] = `
+Object {
+  "_id": Any<String>,
+  "description": "Created By CSV",
+  "dn": "uid=scarter,ou=people,dc=agiledigital,dc=com,dc=au",
+  "givenName": "Steven",
+  "mail": "scarter@example.com",
+  "sn": "Carter",
+  "telephoneNumber": "1234567",
+  "uid": "scarter",
+}
+`;
