@@ -24,7 +24,7 @@
     "superagent-defaults": "0.1.14",
     "supertest": "4.0.2",
     "ts-jest": "24.2.0",
-    "ts-loader": "6.2.1",
+    "ts-loader": "6.2.2",
     "ts-node": "8.5.4",
     "tslint": "5.20.1",
     "tslint-config-prettier": "1.18.0",
