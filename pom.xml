@@ -13,7 +13,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<openidm.version>6.5.0.4</openidm.version>
-		<felix.dependencymanager.annotation.version>5.0.1</felix.dependencymanager.annotation.version>
+		<felix.dependencymanager.annotation.version>5.0.2</felix.dependencymanager.annotation.version>
 
 		<!-- OSGi bundles properties -->
 		<openidm.osgi.import.before.defaults />
