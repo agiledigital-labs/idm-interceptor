@@ -951,10 +951,10 @@
   dependencies:
     jest-diff "^24.3.0"
 
-"@types/lodash@3.10.2":
-  version "3.10.2"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-3.10.2.tgz#c1fbda1562ef5603c8192fe1fe65b017849d5873"
-  integrity sha512-TmlYodTNhMzVzv3CK/9sXGzh31jWsRKHE3faczhVgYFCdXIRQRCOPD+0NDlR+SvJlCj914yP3q3aAupt53p2Ug==
+"@types/lodash@3.10.4":
+  version "3.10.4"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-3.10.4.tgz#19548093a6c8a9c99ac71faa831a75cac26a9356"
+  integrity sha512-RgFRQAdA6xwnxp2t9ntDbutaqVBmk8drUl6nizg6RUU/IN/8W8a+EzcxCOTZdYKeC6RKDXghF8saAD2e5S+DlQ==
 
 "@types/node@*":
   version "13.1.4"
