@@ -11,7 +11,7 @@
     "@babel/preset-env": "7.7.7",
     "@babel/preset-typescript": "7.7.7",
     "@types/config": "0.0.34",
-    "@types/jest": "24.0.25",
+    "@types/jest": "26.0.24",
     "@types/lodash": "3.10.2",
     "@types/node": "12.12.24",
     "@types/supertest": "2.0.8",
