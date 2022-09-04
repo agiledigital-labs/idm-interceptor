@@ -2,14 +2,14 @@
 # yarn lockfile v1
 
 
-"@agiledigital/idm-ts-types@1.0.14":
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/@agiledigital/idm-ts-types/-/idm-ts-types-1.0.14.tgz#d5cb37115bf6ad1ed3160f462ffbb7a343b4cc7b"
-  integrity sha512-dGsIyLDKAnUgc0CChm5zWCMetZ0GvAlNiBsbOn5KD6MiHXvUZNCK+eipJNeLyL3vi4+RCRGnvKlPWdginPdw/A==
+"@agiledigital/idm-ts-types@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@agiledigital/idm-ts-types/-/idm-ts-types-1.1.0.tgz#2bf8e524c72055e4e6a84e061276f65a833aeb83"
+  integrity sha512-pWaoeUWtwwb1+sU4HacZHAcKlYavcDTr5RX8/AO8ZpTEPigH/1toIS3EKnAcfHvs2D+HKdrJPS3hFxplGOKbBQ==
   dependencies:
     camelcase "^5.3.1"
     config "^3.2.2"
-    lodash "^4.17.15"
+    lodash "^4.17.21"
     nunjucks "^3.2.2"
 
 "@babel/cli@7.7.7":
@@ -3895,6 +3895,11 @@ lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.4:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 loose-envify@^1.0.0:
   version "1.4.0"

@@ -2,7 +2,7 @@
   "name": "@agiledigital/interceptor-integration-test",
   "version": "0.0.1",
   "devDependencies": {
-    "@agiledigital/idm-ts-types": "1.0.14",
+    "@agiledigital/idm-ts-types": "1.1.0",
     "@babel/cli": "7.7.7",
     "@babel/core": "7.7.7",
     "@babel/plugin-proposal-class-properties": "7.7.4",
