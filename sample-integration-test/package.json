@@ -18,7 +18,7 @@
     "@types/webpack": "4.41.32",
     "babel-plugin-iife-wrap": "1.1.0",
     "extra-watch-webpack-plugin": "1.0.3",
-    "glob": "7.1.6",
+    "glob": "7.2.3",
     "jest": "24.9.0",
     "prettier": "1.19.1",
     "superagent-defaults": "0.1.14",
